@@ -349,12 +349,15 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
       <footer className="mt-8 text-center text-xs text-zinc-500">
         <p>
           Built with ❤️ by{' '}
+          <span className="text-zinc-300 font-medium">Samreen Sami</span>
+          {' ('}
           <a
             href="mailto:Samreen.sami84@gmail.com"
             className="text-zinc-400 underline hover:text-red-400 transition"
           >
-            Samreen Sami
+            Samreen.sami84@gmail.com
           </a>
+          {')'}
         </p>
       </footer>
 
