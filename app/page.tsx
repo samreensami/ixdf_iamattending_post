@@ -16,7 +16,7 @@ export default function BadgeGenerator() {
   const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const suggestedCaption = `I’m Attending AI Summit Lahore 2026! 🚀
+  const suggestedCaption = `I am Attending AI Summit Lahore 2026! 🚀
 
 Excited to be part of AI Summit Lahore, bringing together AI enthusiasts, designers, developers, technology professionals, innovators, students, and industry leaders to learn, connect, and explore the rapidly evolving world of Artificial Intelligence.
 
@@ -251,7 +251,7 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Samreen Sami"
+                placeholder="Enter Your Full Name"
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500"
               />
             </div>
@@ -264,7 +264,7 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
                 type="text"
                 value={designation}
                 onChange={(e) => setDesignation(e.target.value)}
-                placeholder="Full Stack Developer"
+                placeholder="Enter Your Designation / Role"
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500"
               />
             </div>
@@ -345,15 +345,15 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
         </div>
       </div>
 
-      {/* Built by credit footer */}
+     {/* Built by credit footer */}
       <footer className="mt-8 text-center text-xs text-zinc-500">
         <p>
-          Built with ❤️ by{'Samreen Sami'}
+          Built with ❤️ by{' '}
           <a
-            href="mailto:samreen.sami84@gmail.com"
+            href="mailto:Samreen.sami84@gmail.com"
             className="text-zinc-400 underline hover:text-red-400 transition"
           >
-            Samreen.sami84@gmail.com
+            Samreen Sami
           </a>
         </p>
       </footer>
