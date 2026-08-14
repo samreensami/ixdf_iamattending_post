@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Share2, Copy, Check, AlertTriangle, ZoomIn } from 'lucide-react';
+import { Download, Share2, Copy, Check, AlertTriangle, ZoomIn, Lock } from 'lucide-react';
+import Link from 'next/link';
 
 export default function BadgeGenerator() {
-  const [name, setName] = useState('Samreen Sami');
-  const [designation, setDesignation] = useState('Full Stack Developer');
+  const [name, setName] = useState('Enter Your Name');
+  const [designation, setDesignation] = useState('Enter Your Designation');
   const [userImage, setUserImage] = useState<string | null>(null);
   
   // Image Controls State (Zoom + Position Offsets)
@@ -21,7 +22,7 @@ export default function BadgeGenerator() {
 Excited to be part of AI Summit Lahore, bringing together AI enthusiasts, designers, developers, technology professionals, innovators, students, and industry leaders to learn, connect, and explore the rapidly evolving world of Artificial Intelligence.
 
 📅 Saturday, 22 August 2026
-⏰ 3:00 PM – 8:00 PM
+⏰ 3:00 PM  8:00 PM
 📍 University Of Central Punjab UCP Lahore
 
 🎟️ Register: https://luma.com/61rd1xfw
@@ -53,7 +54,6 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 46px Inter, Arial, sans-serif';
     ctx.textAlign = 'left';
-    // Automatically convert Name to UPPERCASE for uniform styling
     ctx.fillText((currentName || 'Samreen Sami').toUpperCase(), 375, 685);
 
     ctx.fillStyle = '#E5E7EB';
@@ -89,12 +89,10 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
           const centerY = 705;
           const radius = 135;
 
-          // Circular mask
           ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
           ctx.closePath();
           ctx.clip();
 
-          // --- ASPECT RATIO COVER LOGIC (Prevents Image Stretching) ---
           const imgWidth = userImgObj.width;
           const imgHeight = userImgObj.height;
           const imgAspect = imgWidth / imgHeight;
@@ -102,18 +100,15 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
           let renderWidth = radius * 2;
           let renderHeight = radius * 2;
 
-          // Fit image proportionately inside the circle (Aspect Fill)
           if (imgAspect > 1) {
             renderWidth = radius * 2 * imgAspect;
           } else {
             renderHeight = (radius * 2) / imgAspect;
           }
 
-          // Apply Zoom Level
           renderWidth *= zoomLevel;
           renderHeight *= zoomLevel;
 
-          // Center Image & Apply Offsets
           const drawX = (centerX - renderWidth / 2) + offsetX;
           const drawY = (centerY - renderHeight / 2) + offsetY;
 
@@ -128,13 +123,29 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
     };
   }, [name, designation, userImage, zoomLevel, offsetX, offsetY]);
 
-  const downloadBadge = () => {
+  const downloadBadge = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const link = document.createElement('a');
     link.download = `${(name || 'badge').replace(/\s+/g, '_')}_AI_Summit.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+
+    try {
+      await fetch('/api/save-attendee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          designation: designation,
+          createdAt: new Date().toISOString(),
+        }),
+      });
+      console.log('Attendee saved successfully!');
+    } catch (error) {
+      console.error('Failed to log attendee:', error);
+    }
   };
 
   const copyCaption = () => {
@@ -186,9 +197,19 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
 
   return (
     <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center justify-center font-sans">
-      <h1 className="text-3xl font-bold mb-8 text-red-500 tracking-wide">
-        IxDF AI Summit Badge Generator
-      </h1>
+      
+      {/* Top Header with Admin Button */}
+      <div className="max-w-5xl w-full flex flex-row items-center justify-between mb-8 pb-4 border-b border-zinc-800">
+        <h1 className="text-2xl md:text-3xl font-bold text-red-500 tracking-wide">
+          IxDF AI Summit Badge Generator
+        </h1>
+        <Link
+          href="/admin"
+          className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs md:text-sm px-4 py-2.5 rounded-xl border border-zinc-700 flex items-center gap-2 transition cursor-pointer"
+        >
+          <Lock size={15} /> Admin Portal
+        </Link>
+      </div>
 
       {/* Main Generator Card */}
       <div className="max-w-5xl w-full bg-zinc-900 p-8 rounded-2xl border border-zinc-800 shadow-2xl">
