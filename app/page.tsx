@@ -51,12 +51,13 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
     currentDesignation: string
   ) => {
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 46px sans-serif';
+    ctx.font = 'bold 46px Inter, Arial, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText(currentName || 'Samreen Sami', 375, 685);
+    // Automatically convert Name to UPPERCASE for uniform styling
+    ctx.fillText((currentName || 'Samreen Sami').toUpperCase(), 375, 685);
 
     ctx.fillStyle = '#E5E7EB';
-    ctx.font = '400 26px sans-serif';
+    ctx.font = '400 26px Inter, Arial, sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText(currentDesignation || 'Full Stack Developer', 375, 730);
   };
@@ -88,17 +89,35 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
           const centerY = 705;
           const radius = 135;
 
+          // Circular mask
           ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
           ctx.closePath();
           ctx.clip();
 
-          const baseSize = 270;
-          const scaledSize = baseSize * zoomLevel;
-          
-          const drawX = (centerX - scaledSize / 2) + offsetX;
-          const drawY = (centerY - scaledSize / 2) + offsetY;
+          // --- ASPECT RATIO COVER LOGIC (Prevents Image Stretching) ---
+          const imgWidth = userImgObj.width;
+          const imgHeight = userImgObj.height;
+          const imgAspect = imgWidth / imgHeight;
 
-          ctx.drawImage(userImgObj, drawX, drawY, scaledSize, scaledSize);
+          let renderWidth = radius * 2;
+          let renderHeight = radius * 2;
+
+          // Fit image proportionately inside the circle (Aspect Fill)
+          if (imgAspect > 1) {
+            renderWidth = radius * 2 * imgAspect;
+          } else {
+            renderHeight = (radius * 2) / imgAspect;
+          }
+
+          // Apply Zoom Level
+          renderWidth *= zoomLevel;
+          renderHeight *= zoomLevel;
+
+          // Center Image & Apply Offsets
+          const drawX = (centerX - renderWidth / 2) + offsetX;
+          const drawY = (centerY - renderHeight / 2) + offsetY;
+
+          ctx.drawImage(userImgObj, drawX, drawY, renderWidth, renderHeight);
           ctx.restore();
 
           drawText(ctx, name, designation);
@@ -252,7 +271,7 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter Your Full Name"
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500"
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 uppercase"
               />
             </div>
 
@@ -319,7 +338,7 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
             </div>
           </div>
 
-          {/* Clean Canvas Preview (Isolated with NO instructions inside) */}
+          {/* Clean Canvas Preview */}
           <div className="flex flex-col items-center justify-center bg-black p-4 rounded-xl border border-zinc-800/80">
             <canvas
               ref={canvasRef}
@@ -330,7 +349,7 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
         </div>
       </div>
 
-      {/* Separate Guidelines Container at Bottom Page Level */}
+      {/* Guidelines Container */}
       <div className="max-w-5xl w-full mt-6 bg-zinc-900/90 border border-red-900/40 rounded-2xl p-5 text-xs text-red-200 shadow-lg">
         <p className="font-semibold text-red-400 mb-2 text-sm flex items-center gap-2">
           <AlertTriangle size={18} /> Mandatory Post & Tagging Guidelines
@@ -345,7 +364,7 @@ Organized by @IxDF Pakistan at @University Of Central Punjab UCP Lahore.
         </div>
       </div>
 
-     {/* Built by credit footer */}
+      {/* Built by credit footer */}
       <footer className="mt-8 text-center text-xs text-zinc-500">
         <p>
           Built with ❤️ by{' '}
